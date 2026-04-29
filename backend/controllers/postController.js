@@ -73,3 +73,48 @@ exports.getUserPosts = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+exports.updatePost = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+        if (!post) return res.status(404).json({ message: 'Post not found' });
+
+        // Check if user is the post owner
+        if (post.user.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'You can only edit your own posts' });
+        }
+
+        const { content, images } = req.body;
+        if (content) post.content = content;
+        if (images !== undefined) post.images = images;
+
+        await post.save();
+
+        const updatedPost = await Post.findById(req.params.id)
+            .populate('user', ['fullName', 'role'])
+            .populate('comments.user', ['fullName', 'role']);
+
+        res.json(updatedPost);
+    } catch (err) {
+        console.error('Error in updatePost:', err);
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};
+
+exports.deletePost = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+        if (!post) return res.status(404).json({ message: 'Post not found' });
+
+        // Check if user is the post owner
+        if (post.user.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'You can only delete your own posts' });
+        }
+
+        await Post.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Post deleted successfully' });
+    } catch (err) {
+        console.error('Error in deletePost:', err);
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};

@@ -221,7 +221,16 @@ function Feed() {
       <div className="space-y-4">
         {posts.length > 0 ? (
           posts.map((post) => (
-            <PostCard key={post._id} post={post} />
+            <PostCard 
+              key={post._id} 
+              post={post}
+              onPostUpdated={(updatedPost) => {
+                setPosts(posts.map(p => p._id === updatedPost._id ? updatedPost : p));
+              }}
+              onPostDeleted={(postId) => {
+                setPosts(posts.filter(p => p._id !== postId));
+              }}
+            />
           ))
         ) : (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">

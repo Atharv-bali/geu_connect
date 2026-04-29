@@ -64,6 +64,7 @@ export const authAPI = {
   register: (userData) => api.post('/auth/register', userData),
   login: (credentials) => api.post('/auth/login', credentials),
   getCurrentUser: () => api.get('/auth/me'),
+  updateProfile: (profileData) => api.put('/auth/me', profileData),
 };
 
 // Post endpoints
@@ -73,6 +74,8 @@ export const postAPI = {
   toggleLike: (postId) => api.put(`/posts/like/${postId}`),
   addComment: (postId, commentData) => api.post(`/posts/${postId}/comment`, commentData),
   getUserPosts: (userId) => api.get(`/posts/user/${userId}`),
+  updatePost: (postId, postData) => api.put(`/posts/${postId}`, postData),
+  deletePost: (postId) => api.delete(`/posts/${postId}`),
 };
 
 // Project endpoints
@@ -84,6 +87,8 @@ export const projectAPI = {
   handleJoinRequest: (projectId, requestId, action) => 
     api.put(`/projects/${projectId}/requests/${requestId}`, { action }),
   getUserProjects: (userId) => api.get(`/projects/user/${userId}`),
+  updateProject: (projectId, projectData) => api.put(`/projects/${projectId}`, projectData),
+  deleteProject: (projectId) => api.delete(`/projects/${projectId}`),
 };
 
 // Forum endpoints
@@ -91,12 +96,18 @@ export const forumAPI = {
   getAllThreads: () => api.get('/forums'),
   askQuestion: (questionData) => api.post('/forums/ask', questionData),
   answerQuestion: (questionId, answerData) => api.post(`/forums/answers/${questionId}`, answerData),
+  updateQuestion: (questionId, questionData) => api.put(`/forums/${questionId}`, questionData),
+  deleteQuestion: (questionId) => api.delete(`/forums/${questionId}`),
+  deleteAnswer: (questionId, answerId) => api.delete(`/forums/${questionId}/answers/${answerId}`),
 };
 
 // Interview endpoints
 export const interviewAPI = {
   getUserInterviews: () => api.get('/interviews'),
   scheduleInterview: (interviewData) => api.post('/interviews', interviewData),
+  respondToInterview: (interviewId, responseData) => api.put(`/interviews/${interviewId}/respond`, responseData),
+  acceptProposedTime: (interviewId) => api.put(`/interviews/${interviewId}/accept-proposed`),
+  markInterviewComplete: (interviewId) => api.put(`/interviews/${interviewId}/complete`),
 };
 
 export default api;

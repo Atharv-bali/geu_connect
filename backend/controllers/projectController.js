@@ -222,3 +222,56 @@ exports.getUserProjects = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+exports.updateProject = async (req, res) => {
+    try {
+        const { projectId } = req.params;
+        const { title, description, techStack, status } = req.body;
+
+        const project = await Project.findById(projectId);
+        if (!project) return res.status(404).json({ message: 'Project not found' });
+
+        // Check if user is the project owner
+        if (project.user.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Only project owner can update this project' });
+        }
+
+        if (title) project.title = title;
+        if (description) project.description = description;
+        if (techStack) project.techStack = techStack;
+        if (status) project.status = status;
+
+        await project.save();
+
+        const updatedProject = await Project.findById(projectId)
+            .populate('user', ['fullName', 'role'])
+            .populate('joinRequests.user', ['fullName', 'role', 'email'])
+            .populate('members', ['fullName', 'role', 'email']);
+
+        res.json({ message: 'Project updated successfully', project: updatedProject });
+    } catch (err) {
+        console.error('Error in updateProject:', err);
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};
+
+exports.deleteProject = async (req, res) => {
+    try {
+        const { projectId } = req.params;
+
+        const project = await Project.findById(projectId);
+        if (!project) return res.status(404).json({ message: 'Project not found' });
+
+        // Check if user is the project owner
+        if (project.user.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Only project owner can delete this project' });
+        }
+
+        await Project.findByIdAndDelete(projectId);
+
+        res.json({ message: 'Project deleted successfully' });
+    } catch (err) {
+        console.error('Error in deleteProject:', err);
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};

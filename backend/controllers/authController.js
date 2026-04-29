@@ -74,3 +74,29 @@ exports.getCurrentUser = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+exports.updateProfile = async (req, res) => {
+    try {
+        const { fullName, skills } = req.body;
+        
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        
+        if (fullName) user.fullName = fullName;
+        if (skills) user.skills = skills;
+        
+        await user.save();
+        
+        res.json({
+            id: user._id,
+            fullName: user.fullName,
+            email: user.email,
+            role: user.role,
+            skills: user.skills || [],
+            reputationPoints: user.reputationPoints
+        });
+    } catch (err) {
+        console.error('Error in updateProfile:', err);
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};

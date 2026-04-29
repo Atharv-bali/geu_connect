@@ -33,8 +33,16 @@ const InterviewSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Scheduled', 'Completed', 'Cancelled'],
-        default: 'Scheduled'
+        enum: ['Pending', 'Accepted', 'Declined', 'Completed', 'Cancelled'],
+        default: 'Pending'
+    },
+    proposedDateTime: {
+        date: Date,
+        time: String
+    },
+    proposedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
     createdAt: { type: Date, default: Date.now }
 });

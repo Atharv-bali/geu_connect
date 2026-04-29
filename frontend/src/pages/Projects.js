@@ -96,7 +96,12 @@ function Projects() {
       {projects.length > 0 ? (
         <div className="grid md:grid-cols-2 gap-6">
           {projects.map((project) => (
-            <ProjectCard key={project._id} project={project} />
+            <ProjectCard 
+              key={project._id} 
+              project={project} 
+              onRequestSent={fetchProjects}
+              onRequestHandled={fetchProjects}
+            />
           ))}
         </div>
       ) : (

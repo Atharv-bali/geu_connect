@@ -11,7 +11,9 @@ require('dotenv').config();
 
 const app = express();
 
-app.use(express.json());
+// Increase payload limit to handle base64 images (50MB limit)
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
 app.use('/api/auth', authRoutes);

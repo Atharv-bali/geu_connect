@@ -1,15 +1,21 @@
 const Post = require('../models/Posts');
 
 exports.createPost = async (req, res) => {
-    const newPost = new Post({
-        content: req.body.content,
-        imageURL: req.body.imageURL,
-        user: req.user.id
-    });
+    try {
+        const newPost = new Post({
+            content: req.body.content,
+            imageURL: req.body.imageURL, // Keep for backward compatibility
+            images: req.body.images || [], // Support multiple images
+            user: req.user.id
+        });
 
-    const post = await newPost.save();
-    const populatedPost = await Post.findById(post._id).populate('user', ['fullName', 'role']);
-    res.status(201).json(populatedPost);
+        const post = await newPost.save();
+        const populatedPost = await Post.findById(post._id).populate('user', ['fullName', 'role']);
+        res.status(201).json(populatedPost);
+    } catch (err) {
+        console.error('Error creating post:', err);
+        res.status(500).json({ message: 'Failed to create post', error: err.message });
+    }
 };
 
 exports.getFeed = async (req, res) => {
@@ -52,4 +58,18 @@ exports.addComment = async (req, res) => {
         .populate('comments.user', ['fullName', 'role']);
     
     res.json(updatedPost.comments);
+};
+
+exports.getUserPosts = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const posts = await Post.find({ user: userId })
+            .sort({ createdAt: -1 })
+            .populate('user', ['fullName', 'role'])
+            .populate('comments.user', ['fullName', 'role']);
+        res.json(posts);
+    } catch (err) {
+        console.error('Error in getUserPosts:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
 };

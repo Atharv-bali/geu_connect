@@ -16,7 +16,16 @@ exports.register = async (req, res) => {
     const payload = { user: { id: user._id, role: user.role } };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '30d' });
 
-    res.status(201).json({ token, user: { id: user._id, fullName: user.fullName, email: user.email, role: user.role } });
+    res.status(201).json({ 
+        token, 
+        user: { 
+            id: user._id, 
+            fullName: user.fullName, 
+            email: user.email, 
+            role: user.role,
+            skills: user.skills || []
+        } 
+    });
 };
 
 exports.login = async (req, res) => {
@@ -38,6 +47,30 @@ exports.login = async (req, res) => {
 
     res.json({
         token,
-        user: { id: user._id, fullName: user.fullName, role: user.role }
+        user: { 
+            id: user._id, 
+            fullName: user.fullName, 
+            role: user.role,
+            skills: user.skills || []
+        }
     });
+};
+
+exports.getCurrentUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        
+        res.json({
+            id: user._id,
+            fullName: user.fullName,
+            email: user.email,
+            role: user.role,
+            skills: user.skills || [],
+            reputationPoints: user.reputationPoints
+        });
+    } catch (err) {
+        console.error('Error in getCurrentUser:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
 };

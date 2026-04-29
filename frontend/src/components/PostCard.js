@@ -28,10 +28,17 @@ function PostCard({ post }) {
     if (newComment.trim()) {
       try {
         const response = await postAPI.addComment(post._id, { text: newComment });
+        console.log('Comment response:', response);
         setComments(response.data);
         setNewComment('');
       } catch (err) {
         console.error('Error adding comment:', err);
+        console.error('Error details:', {
+          status: err.response?.status,
+          data: err.response?.data,
+          message: err.message
+        });
+        alert('Failed to post comment: ' + (err.response?.data?.message || err.message));
       }
     }
   };
@@ -74,7 +81,31 @@ function PostCard({ post }) {
           
           <p className="mt-3 text-gray-700 leading-relaxed">{post.content}</p>
           
-          {post.imageURL && (
+          {/* Display multiple images if available */}
+          {post.images && post.images.length > 0 && (
+            <div className={`mt-4 grid gap-2 ${
+              post.images.length === 1 ? 'grid-cols-1' :
+              post.images.length === 2 ? 'grid-cols-2' :
+              post.images.length === 3 ? 'grid-cols-2' :
+              'grid-cols-2'
+            }`}>
+              {post.images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`Post content ${index + 1}`}
+                  className={`rounded-lg w-full object-cover ${
+                    post.images.length === 1 ? 'max-h-96' :
+                    post.images.length === 3 && index === 0 ? 'col-span-2 max-h-64' :
+                    'max-h-48'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+          
+          {/* Fallback to single imageURL for backward compatibility */}
+          {(!post.images || post.images.length === 0) && post.imageURL && (
             <img
               src={post.imageURL}
               alt="Post content"

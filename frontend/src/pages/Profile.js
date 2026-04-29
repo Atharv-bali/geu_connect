@@ -2,16 +2,33 @@ import React, { useState, useEffect } from 'react';
 import ProfileHeader from '../components/ProfileHeader';
 import PostCard from '../components/PostCard';
 import { useAuth } from '../context/AuthContext';
-import { postAPI } from '../services/api';
+import { postAPI, authAPI } from '../services/api';
 
 function Profile() {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [userPosts, setUserPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(user);
 
   useEffect(() => {
+    fetchUserData();
     fetchUserPosts();
   }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await authAPI.getCurrentUser();
+      setCurrentUser(response.data);
+      // Update localStorage with fresh user data
+      const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+      const updatedUser = { ...storedUser, skills: response.data.skills };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    } catch (err) {
+      console.error('Error fetching user data:', err);
+      // Fallback to stored user
+      setCurrentUser(user);
+    }
+  };
 
   const fetchUserPosts = async () => {
     try {
@@ -39,7 +56,27 @@ function Profile() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <ProfileHeader user={user} />
+      <ProfileHeader user={currentUser} />
+
+      {/* Skills Section */}
+      {currentUser?.skills && currentUser.skills.length > 0 && (
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Skills</h2>
+          <div className="flex flex-wrap gap-2">
+            {currentUser.skills.map((skill, index) => (
+              <span
+                key={index}
+                className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium hover:bg-blue-200 transition"
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+          <p className="text-xs text-gray-500 mt-3">
+            💡 Skills are automatically added from your projects
+          </p>
+        </div>
+      )}
 
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">My Posts</h2>

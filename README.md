@@ -1,10 +1,10 @@
-# GEU-Connect 🎓
+# GEU-Connect 
 
 **GEU-Connect** is a full-stack academic networking platform designed exclusively for Graphic Era University students and professors. It facilitates collaboration, knowledge sharing, and professional networking within the university community.
 
 ---
 
-## 🌟 Features
+## Features
 
 ### 1. **User Authentication**
 - Secure registration and login system
@@ -59,7 +59,7 @@
 
 ---
 
-## 🗄️ Database Collections
+## Database Collections
 
 ### 1. **Users Collection**
 **Purpose:** Store user account information and profile data
@@ -187,7 +187,7 @@
 
 ---
 
-## 🔄 How Each Functionality Works
+## How Each Functionality Works
 
 ### **1. Authentication Flow**
 ```
@@ -332,7 +332,7 @@ Now removed from UI for simplicity
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### **Frontend**
 - React.js
@@ -351,7 +351,7 @@ Now removed from UI for simplicity
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 geu-connect/
@@ -410,7 +410,7 @@ geu-connect/
 
 ---
 
-## 🚀 Installation & Setup
+## Installation & Setup
 
 ### **Prerequisites**
 - Node.js (v14+)
@@ -453,7 +453,7 @@ npm start
 
 ---
 
-## 🔐 Security Features
+## Security Features
 
 1. **Email Validation:** Only @geu.ac.in emails allowed
 2. **Password Hashing:** bcrypt with salt rounds
@@ -464,7 +464,7 @@ npm start
 
 ---
 
-## 📊 API Endpoints
+## API Endpoints
 
 ### **Authentication**
 - `POST /api/auth/register` - Register new user
@@ -506,7 +506,7 @@ npm start
 
 ---
 
-## 👥 User Roles
+## User Roles
 
 ### **Student**
 - Create posts, projects, forum questions
@@ -522,7 +522,7 @@ npm start
 
 ---
 
-## 🎯 Key Workflows
+## Key Workflows
 
 ### **Project Collaboration Workflow**
 1. Student creates project with tech stack
@@ -549,7 +549,7 @@ npm start
 
 ---
 
-## 🐛 Known Limitations
+## Known Limitations
 
 1. No real-time notifications (future enhancement)
 2. No file attachments (only images via base64)
@@ -559,7 +559,7 @@ npm start
 
 ---
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 - Real-time chat system
 - Push notifications
@@ -572,13 +572,13 @@ npm start
 
 ---
 
-## 📝 License
+## License
 
 This project is developed for Graphic Era University and is intended for educational purposes.
 
 ---
 
-## 👨‍💻 Developer Notes
+## Developer Notes
 
 - All passwords are hashed using bcrypt before storage
 - JWT tokens expire after 30 days
@@ -589,7 +589,7 @@ This project is developed for Graphic Era University and is intended for educati
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 Built with ❤️ for the GEU community to foster collaboration, learning, and innovation.
 

@@ -95,26 +95,26 @@ function Profile() {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading profile...</p>
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center py-16">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600 mx-auto"></div>
+          <p className="mt-6 text-xl text-gray-600 font-semibold">Loading profile...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-5xl mx-auto space-y-6 fade-in">
       <ProfileHeader user={currentUser} />
 
       {/* Edit Profile Button */}
-      <div className="mb-6 flex justify-end">
+      <div className="flex justify-end">
         <button
           onClick={() => setShowEditModal(true)}
-          className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition font-medium flex items-center space-x-2"
+          className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-xl transition-all duration-200 font-bold text-base flex items-center space-x-2 transform hover:scale-105"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
           </svg>
           <span>Edit Profile</span>
@@ -123,34 +123,41 @@ function Profile() {
 
       {/* Skills Section */}
       {currentUser?.skills && currentUser.skills.length > 0 && (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Skills</h2>
-          <div className="flex flex-wrap gap-2">
+        <div className="bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100">
+          <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center space-x-3">
+            <span className="text-4xl">🎯</span>
+            <span>Skills</span>
+          </h2>
+          <div className="flex flex-wrap gap-3">
             {currentUser.skills.map((skill, index) => (
               <span
                 key={index}
-                className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium hover:bg-blue-200 transition"
+                className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full text-base font-bold hover:shadow-xl transition-all duration-200 transform hover:scale-105"
               >
                 {skill}
               </span>
             ))}
           </div>
-          <p className="text-xs text-gray-500 mt-3">
+          <p className="text-sm text-gray-500 mt-4 bg-blue-50 p-3 rounded-xl border border-blue-100">
             💡 Skills are automatically added from your projects. You can also add/remove them manually.
           </p>
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">My Posts</h2>
-        <div className="space-y-4">
+      <div className="bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6 flex items-center space-x-3">
+          <span className="text-4xl">📝</span>
+          <span>My Posts</span>
+        </h2>
+        <div className="space-y-6">
           {userPosts.length > 0 ? (
             userPosts.map((post) => (
               <PostCard key={post._id} post={post} />
             ))
           ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">No posts yet. Share your first update!</p>
+            <div className="text-center py-16 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl border border-purple-100">
+              <div className="text-7xl mb-4">📝</div>
+              <p className="text-gray-600 text-xl font-semibold">No posts yet. Share your first update!</p>
             </div>
           )}
         </div>

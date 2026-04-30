@@ -121,57 +121,64 @@ function Feed() {
 
   if (loading) {
     return (
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading feed...</p>
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center py-16">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
+          <p className="mt-6 text-xl text-gray-600 font-semibold">Loading feed...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Activity Feed</h1>
+    <div className="max-w-4xl mx-auto space-y-6 fade-in">
+      {/* Page Header */}
+      <div className="bg-gradient-to-r from-green-500 via-teal-500 to-cyan-500 rounded-3xl shadow-2xl p-8 text-white">
+        <h1 className="text-4xl font-bold mb-2 flex items-center space-x-3">
+          <span className="text-5xl">📰</span>
+          <span>Activity Feed</span>
+        </h1>
+        <p className="text-green-100 text-lg">Share your academic updates and connect with peers</p>
+      </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+        <div className="p-4 bg-red-50 border-2 border-red-300 text-red-700 rounded-2xl shadow-lg text-base font-semibold">
           {error}
         </div>
       )}
 
       {/* Create Post */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+      <div className="bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100">
         <div className="flex items-start space-x-4">
-          <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold">
+          <div className="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white flex items-center justify-center font-bold text-xl shadow-lg">
             {user?.fullName?.charAt(0).toUpperCase()}
           </div>
           <div className="flex-1">
             <textarea
               value={newPostContent}
               onChange={(e) => setNewPostContent(e.target.value)}
-              placeholder="Share your academic update..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-              rows="3"
+              placeholder="Share your academic update, ideas, or achievements..."
+              className="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100 resize-none text-base transition-all duration-200"
+              rows="4"
               disabled={posting}
             />
             
             {/* Image Previews */}
             {imagePreviews.length > 0 && (
-              <div className="mt-3 grid grid-cols-2 gap-2">
+              <div className="mt-4 grid grid-cols-2 gap-3">
                 {imagePreviews.map((preview, index) => (
-                  <div key={index} className="relative">
+                  <div key={index} className="relative group">
                     <img 
                       src={preview} 
                       alt={`Preview ${index + 1}`} 
-                      className="w-full h-48 rounded-lg object-cover"
+                      className="w-full h-56 rounded-2xl object-cover shadow-lg group-hover:shadow-2xl transition-all duration-300"
                     />
                     <button
                       onClick={() => handleRemoveImage(index)}
-                      className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1.5 hover:bg-red-700 transition shadow-lg"
+                      className="absolute top-3 right-3 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition shadow-xl transform hover:scale-110"
                       title="Remove image"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
@@ -180,8 +187,8 @@ function Feed() {
               </div>
             )}
             
-            <div className="flex items-center justify-between mt-3">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-between mt-4">
+              <div className="flex items-center space-x-3">
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -193,22 +200,22 @@ function Feed() {
                 />
                 <label
                   htmlFor="image-upload"
-                  className="flex items-center space-x-2 text-gray-600 hover:text-primary transition cursor-pointer"
+                  className="flex items-center space-x-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-xl transition cursor-pointer text-gray-700 font-semibold"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <span className="text-sm font-medium">
+                  <span className="text-base">
                     {selectedImages.length > 0 
-                      ? `${selectedImages.length} image${selectedImages.length > 1 ? 's' : ''} selected` 
-                      : 'Add Images (Max 4)'}
+                      ? `${selectedImages.length} image${selectedImages.length > 1 ? 's' : ''}` 
+                      : 'Add Images'}
                   </span>
                 </label>
               </div>
               <button
                 onClick={handleCreatePost}
                 disabled={posting || !newPostContent.trim()}
-                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-xl transition-all duration-200 font-bold text-base disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105"
               >
                 {posting ? 'Posting...' : 'Post'}
               </button>
@@ -218,7 +225,7 @@ function Feed() {
       </div>
 
       {/* Posts Feed */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         {posts.length > 0 ? (
           posts.map((post) => (
             <PostCard 
@@ -233,8 +240,9 @@ function Feed() {
             />
           ))
         ) : (
-          <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <p className="text-gray-500 text-lg">No posts yet. Be the first to share!</p>
+          <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl shadow-xl p-16 text-center border border-blue-100">
+            <div className="text-7xl mb-4">📝</div>
+            <p className="text-gray-600 text-xl font-semibold">No posts yet. Be the first to share!</p>
           </div>
         )}
       </div>

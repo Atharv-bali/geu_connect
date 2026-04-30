@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { projectAPI, postAPI, interviewAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
-function ProjectCard({ project, onRequestSent, onRequestHandled }) {
+function ProjectCard({ project, onRequestSent, onRequestHandled, onEdit, onClose, onDelete }) {
   const { user } = useAuth();
   const [requesting, setRequesting] = useState(false);
   const [requested, setRequested] = useState(false);
@@ -21,6 +21,8 @@ function ProjectCard({ project, onRequestSent, onRequestHandled }) {
     topic: ''
   });
 
+  const isClosed = project.status === 'Closed';
+
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -30,12 +32,10 @@ function ProjectCard({ project, onRequestSent, onRequestHandled }) {
     switch (status) {
       case 'Open':
         return 'bg-green-100 text-green-700';
-      case 'In Progress':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'Completed':
-        return 'bg-gray-100 text-gray-700';
+      case 'Closed':
+        return 'bg-red-100 text-red-700';
       default:
-        return 'bg-blue-100 text-blue-700';
+        return 'bg-gray-100 text-gray-700';
     }
   };
 
@@ -211,12 +211,49 @@ function ProjectCard({ project, onRequestSent, onRequestHandled }) {
       <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h3 className="text-xl font-bold text-gray-900">{project.title}</h3>
-            {project.isResearchProject && (
-              <span className="inline-block mt-1 px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-medium">
-                🔬 Research Project
-              </span>
-            )}
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">{project.title}</h3>
+                {project.isResearchProject && (
+                  <span className="inline-block mt-1 px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-medium">
+                    🔬 Research Project
+                  </span>
+                )}
+              </div>
+              {isOwner && (
+                <div className="flex space-x-2 ml-4">
+                  <button
+                    onClick={() => onEdit(project)}
+                    className="text-blue-600 hover:text-blue-800 transition"
+                    title="Edit project"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
+                  {!isClosed && (
+                    <button
+                      onClick={() => onClose(project._id)}
+                      className="text-orange-600 hover:text-orange-800 transition"
+                      title="Close project"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    </button>
+                  )}
+                  <button
+                    onClick={() => onDelete(project._id)}
+                    className="text-red-600 hover:text-red-800 transition"
+                    title="Delete project"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
           <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(project.status)}`}>
             {project.status}
@@ -267,7 +304,7 @@ function ProjectCard({ project, onRequestSent, onRequestHandled }) {
           </div>
         )}
         
-        {project.status === 'Open' && !isOwner && (
+        {!isOwner && !isClosed && (
           <button 
             onClick={handleRequestToJoin}
             disabled={requesting || hasRequested}
@@ -279,6 +316,12 @@ function ProjectCard({ project, onRequestSent, onRequestHandled }) {
           >
             {requesting ? 'Sending Request...' : hasRequested ? '✓ Request Sent' : 'Request to Join'}
           </button>
+        )}
+
+        {!isOwner && isClosed && (
+          <div className="w-full px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-center font-medium">
+            🔒 This project is closed
+          </div>
         )}
 
         {isOwner && (

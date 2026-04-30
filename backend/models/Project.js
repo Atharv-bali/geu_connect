@@ -20,7 +20,7 @@ const ProjectSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Open', 'In Progress', 'Completed', 'Closed'],
+        enum: ['Open', 'Closed'],
         default: 'Open'
     },
     isResearchProject: {
